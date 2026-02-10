@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Supabase Database</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        .container {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+        h1 {
+            color: #06b6d4;
+            margin-bottom: 20px;
+        }
+        .step {
+            background: #0f172a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #06b6d4;
+        }
+        .sql-code {
+            background: #000;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #22d3ee;
+        }
+        button {
+            background: linear-gradient(to right, #06b6d4, #3b82f6);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        .success {
+            background: #064e3b;
+            color: #6ee7b7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #10b981;
+        }
+        .error {
+            background: #7f1d1d;
+            color: #fca5a5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #ef4444;
+        }
+        a {
+            color: #22d3ee;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .info {
+            background: #1e3a8a;
+            color: #bfdbfe;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Supabase Database Setup</h1>
+
+        <div class="step">
+            <h2>Step 1: Test Connection</h2>
+            <p>First, let's test if your Supabase credentials are working:</p>
+            <button onclick="testConnection()">Test Connection</button>
+            <div id="connectionResult"></div>
+        </div>
+
+        <div class="step">
+            <h2>Step 2: Create Database Table</h2>
+            <p>Go to your Supabase SQL Editor and run this SQL:</p>
+            <a href="https://supabase.com/dashboard/project/pdtqznsurgocacoqwnav/sql/new" target="_blank" style="font-weight: 600;">
+                → Open SQL Editor
+            </a>
+
+            <div class="sql-code">CREATE TABLE IF NOT EXISTS contact_submissions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  company_name text,
+  full_name text NOT NULL,
+  email text NOT NULL,
+  phone text,
+  automation_interest text NOT NULL,
+  budget_range text,
+  timeline text,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE contact_submissions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public can submit valid contact forms"
+  ON contact_submissions
+  FOR INSERT
+  TO anon
+  WITH CHECK (
+    full_name IS NOT NULL AND
+    length(trim(full_name)) > 0 AND
+    length(full_name) <= 200 AND
+
+    email IS NOT NULL AND
+    length(trim(email)) > 0 AND
+    length(email) <= 320 AND
+    email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$' AND
+
+    automation_interest IS NOT NULL AND
+    length(trim(automation_interest)) > 0 AND
+    length(automation_interest) <= 1000 AND
+
+    (company_name IS NULL OR length(company_name) <= 200) AND
+    (phone IS NULL OR length(phone) <= 50) AND
+    (budget_range IS NULL OR length(budget_range) <= 100) AND
+    (timeline IS NULL OR length(timeline) <= 100)
+  );
+
+CREATE POLICY "Authenticated users can view submissions"
+  ON contact_submissions
+  FOR SELECT
+  TO authenticated
+  USING (true);</div>
+
+            <button onclick="copySQL()">Copy SQL</button>
+        </div>
+
+        <div class="step">
+            <h2>Step 3: Test Form Submission</h2>
+            <p>After running the SQL, test if form submission works:</p>
+            <button onclick="testFormSubmission()">Test Form Submission</button>
+            <div id="submissionResult"></div>
+        </div>
+
+        <div class="info">
+            <strong>📋 Quick Copy SQL:</strong> Click the "Copy SQL" button above, then:
+            <ol style="margin: 10px 0 0 20px;">
+                <li>Click "Open SQL Editor" link</li>
+                <li>Paste the SQL (Ctrl+V or Cmd+V)</li>
+                <li>Click "Run" button</li>
+                <li>Come back and click "Test Form Submission"</li>
+            </ol>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+        const SUPABASE_URL = 'https://pdtqznsurgocacoqwnav.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_Efg5Bo8Kbh9gGV-51MJFnA_nEaBVgFb';
+
+        window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        window.testConnection = async function() {
+            const resultDiv = document.getElementById('connectionResult');
+            resultDiv.innerHTML = '<p style="color: #fbbf24;">Testing connection...</p>';
+
+            try {
+                const { data, error } = await window.supabase
+                    .from('contact_submissions')
+                    .select('count')
+                    .limit(1);
+
+                if (error) {
+                    if (error.message.includes('does not exist')) {
+                        resultDiv.innerHTML = '<div class="error"><strong>❌ Table not found!</strong><br>The contact_submissions table doesn\'t exist yet. Please run the SQL in Step 2.</div>';
+                    } else {
+                        resultDiv.innerHTML = `<div class="error"><strong>❌ Error:</strong> ${error.message}</div>`;
+                    }
+                } else {
+                    resultDiv.innerHTML = '<div class="success"><strong>✅ Connection successful!</strong><br>Supabase is connected and the table exists.</div>';
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<div class="error"><strong>❌ Connection failed:</strong> ${err.message}</div>`;
+            }
+        };
+
+        window.testFormSubmission = async function() {
+            const resultDiv = document.getElementById('submissionResult');
+            resultDiv.innerHTML = '<p style="color: #fbbf24;">Testing form submission...</p>';
+
+            try {
+                const { data, error } = await window.supabase
+                    .from('contact_submissions')
+                    .insert([{
+                        company_name: 'Test Company',
+                        full_name: 'Test User',
+                        email: 'test@example.com',
+                        phone: '555-0000',
+                        automation_interest: 'This is a test submission to verify the form works correctly.',
+                        budget_range: null,
+                        timeline: null
+                    }])
+                    .select();
+
+                if (error) {
+                    resultDiv.innerHTML = `<div class="error"><strong>❌ Submission failed:</strong> ${error.message}</div>`;
+                } else {
+                    resultDiv.innerHTML = '<div class="success"><strong>✅ Form submission works!</strong><br>Your contact form is ready to use. Check your <a href="https://supabase.com/dashboard/project/pdtqznsurgocacoqwnav/editor/contact_submissions" target="_blank">Supabase dashboard</a> to see the test submission.</div>';
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<div class="error"><strong>❌ Submission failed:</strong> ${err.message}</div>`;
+            }
+        };
+
+        window.copySQL = function() {
+            const sql = document.querySelector('.sql-code').textContent;
+            navigator.clipboard.writeText(sql).then(() => {
+                alert('SQL copied to clipboard! Now paste it in the SQL Editor.');
+            });
+        };
+    </script>
+</body>
+</html>
