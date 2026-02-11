@@ -1,44 +1,37 @@
-# Favicon Implementation Plan
+# Favicon Optimization Plan
 
 ## Objective
-Update the website's favicon to use the existing `Logo_zonder_Dami_Systems.png` image (Option A). This image, likely containing only the logomark without text, will provide better visibility and aesthetics in browser tabs compared to the current full logo.
+The current favicon (`Logo_zonder_Dami_Systems.png`) renders too small in the browser tab because of excessive transparent padding around the logomark. The goal is to maximize the logo's size within the square aspect ratio to ensure it is "perfectly" visible.
 
-## Implementation Steps
+## Status: **In Progress**
 
-### Phase 1: Preparation
-- [x] **Verify Asset**: Confirm `Logo_zonder_Dami_Systems.png` is available in the `public/` directory and is suitable for use as an icon.
-- [ ] **Backup**: (Optional) Keep the reference to the old favicon temporarily or rely on Git history.
+### Phase 1: Initial Switch (Completed)
+- [x] **Verify Asset**: Confirmed `Logo_zonder_Dami_Systems.png` availability.
+- [x] **Update `index.html`**: Switched from the old text-heavy logo to the symbol-only logo.
+  - *Result*: Logo is visible but too small (too much whitespace).
 
-### Phase 2: Initial Implementation
-- [x] **Update `index.html`**:
-    - Locate the `<head>` section.
-    - Replace the `href` attribute for `apple-touch-icon`:
-      - *From*: `/FullLogo_Transparent_NoBuffer.png`
-      - *To*: `/Logo_zonder_Dami_Systems.png`
-    - Replace the `href` attribute for `icon` (32x32):
-      - *From*: `/FullLogo_Transparent_NoBuffer.png`
-      - *To*: `/Logo_zonder_Dami_Systems.png`
-    - Replace the `href` attribute for `icon` (16x16):
-      - *From*: `/FullLogo_Transparent_NoBuffer.png`
-      - *To*: `/Logo_zonder_Dami_Systems.png`
+### Phase 2: Refinement (Current Focus)
+The following steps aim to remove the padding and scale the icon.
 
-### Phase 3: Verification & Cleanup
-- [ ] **Browser Test**: Open the application in a browser and check the tab to see if the new icon renders correctly.
-- [ ] **Hard Refresh**: If the old icon persists, perform a hard refresh (Ctrl+F5) or clear the cache.
-- [ ] **Final Check**: Ensure the icon looks good on both light and dark browser themes.
+#### Step 1: Generate Optimized Asset
+- [ ] **Create `favicon_optimized.png`**:
+    - Take `public/Logo_zonder_Dami_Systems.png` as input.
+    - Crop all surrounding transparent whitespace.
+    - Center the logomark in a square canvas.
+    - Scale the logomark to touch the edges (maximize size).
+    - Save as `public/favicon_optimized.png`.
 
-### Phase 4: Optimization (Size Adjustment)
-*The user noted the favicon appears too small, indicating excessive padding around the logo.*
+#### Step 2: Implementation
+- [ ] **Update `index.html`**:
+    - Change `<link rel="icon" ...>` tags to point to `/favicon_optimized.png`.
+    - Change `<link rel="apple-touch-icon" ...>` to point to `/favicon_optimized.png`.
 
-- [ ] **Generate Optimized Asset**: Create a new version (`favicon_optimized.png`) by trimming transparent whitespace from `Logo_zonder_Dami_Systems.png` and scaling the logo to fill the canvas.
-- [ ] **Update `index.html` Again**: Point the favicon links to the new optimized file.
-- [ ] **Verify Visibility**: Confirm the logo appears larger and clearer in the browser tab.
+#### Step 3: Verification
+- [ ] **Browser Test**: Verify the new icon fills the tab area effectively.
+- [ ] **Cache Clear**: Ensure the new file is loaded (force refresh).
 
 ## Checklist
-- [x] Verify `public/Logo_zonder_Dami_Systems.png` exists
-- [x] Update `apple-touch-icon` link in `index.html`
-- [x] Update `icon` (32x32) link in `index.html`
-- [x] Update `icon` (16x16) link in `index.html`
-- [ ] Verify favicon appears in browser tab
-- [ ] Generate `favicon_optimized.png` (Trim whitespace/Maximize logo size)
-- [ ] Update `index.html` to use `favicon_optimized.png`
+- [x] Initial switch to `Logo_zonder_Dami_Systems.png`
+- [ ] Generate cropped/maximized `favicon_optimized.png`
+- [ ] Update HTML references to new file
+- [ ] Final visual verification
