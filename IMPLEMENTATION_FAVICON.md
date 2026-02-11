@@ -1,37 +1,36 @@
-# Favicon Optimization Plan
+# Favicon Optimization Master Plan
+
+## Problem Statement
+The current favicon (`Logo_zonder_Dami_Systems.png`) is displayed too small in the browser tab. This is caused by excessive transparent padding (whitespace) around the actual logo mark in the image file.
 
 ## Objective
-The current favicon (`Logo_zonder_Dami_Systems.png`) renders too small in the browser tab because of excessive transparent padding around the logomark. The goal is to maximize the logo's size within the square aspect ratio to ensure it is "perfectly" visible.
+**Maximize the visual size of the favicon.** We need the logo to touch the edges of the square canvas so it utilizes 100% of the available 16x16 or 32x32 pixel space in the browser tab.
 
-## Status: **In Progress**
+## Implementation Plan
 
-### Phase 1: Initial Switch (Completed)
-- [x] **Verify Asset**: Confirmed `Logo_zonder_Dami_Systems.png` availability.
-- [x] **Update `index.html`**: Switched from the old text-heavy logo to the symbol-only logo.
-  - *Result*: Logo is visible but too small (too much whitespace).
+### Phase 1: Image Optimization (The Critical Step)
+We will create a new asset `favicon_optimized.png` derived from the current logo.
 
-### Phase 2: Refinement (Current Focus)
-The following steps aim to remove the padding and scale the icon.
+1.  **Input**: `public/Logo_zonder_Dami_Systems.png`
+2.  **Action**:
+    *   Identify the bounding box of the non-transparent pixels (the logo mark).
+    *   **Crop** the image to this bounding box, removing all surrounding transparent space.
+    *   **Resize** the cropped logo back to a square aspect ratio (keeping the logo centered and as large as possible without cutting it off).
+    *   Ensure the background remains transparent.
+3.  **Output**: Save as `public/favicon_optimized.png`.
 
-#### Step 1: Generate Optimized Asset
-- [ ] **Create `favicon_optimized.png`**:
-    - Take `public/Logo_zonder_Dami_Systems.png` as input.
-    - Crop all surrounding transparent whitespace.
-    - Center the logomark in a square canvas.
-    - Scale the logomark to touch the edges (maximize size).
-    - Save as `public/favicon_optimized.png`.
+### Phase 2: Deployment
+1.  **Update References**: Modify `index.html` to point to the new `favicon_optimized.png` file for all icon types.
+    *   `<link rel="icon" ...>`
+    *   `<link rel="apple-touch-icon" ...>`
+2.  **Clean Up**: (Optional) Remove the old unused favicon link references.
 
-#### Step 2: Implementation
-- [ ] **Update `index.html`**:
-    - Change `<link rel="icon" ...>` tags to point to `/favicon_optimized.png`.
-    - Change `<link rel="apple-touch-icon" ...>` to point to `/favicon_optimized.png`.
+### Phase 3: Verification
+1.  **Clear Cache**: Browsers aggressively cache favicons. We will need to force a refresh.
+2.  **Visual Check**: Confirm the logo appears significantly larger in the tab.
 
-#### Step 3: Verification
-- [ ] **Browser Test**: Verify the new icon fills the tab area effectively.
-- [ ] **Cache Clear**: Ensure the new file is loaded (force refresh).
-
-## Checklist
-- [x] Initial switch to `Logo_zonder_Dami_Systems.png`
-- [ ] Generate cropped/maximized `favicon_optimized.png`
-- [ ] Update HTML references to new file
-- [ ] Final visual verification
+## Execution Checklist
+- [x] generate_image: Create `favicon_optimized.png` (Crop & Maximize `Logo_zonder_Dami_Systems.png`)
+- [x] Update `index.html` to use `favicon_optimized.png`
+- [x] Verify content of `index.html`
+- [ ] Manual User Verification (Browser Refresh)
