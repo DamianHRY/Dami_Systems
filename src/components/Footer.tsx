@@ -2,7 +2,11 @@ import { Mail, MapPin, Phone, Instagram, Facebook, Twitter, Linkedin } from 'luc
 import { Footer7 } from '@/components/ui/footer-7';
 import damiLogo from '@/assets/dami-logo.png';
 
-export default function Footer() {
+interface FooterProps {
+  onNavigate: (path: string) => void;
+}
+
+export default function Footer({ onNavigate }: FooterProps) {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -18,14 +22,25 @@ export default function Footer() {
         className="h-16 w-auto object-contain"
       />
     ),
-    onClick: () => scrollToSection('home'),
+    onClick: () => {
+      if (window.location.pathname !== '/') {
+        onNavigate('/');
+      } else {
+        scrollToSection('home');
+      }
+    },
   };
 
   const sections = [
     {
       title: 'Quick Links',
       links: [
-        { name: 'Home', onClick: () => scrollToSection('home') },
+        {
+          name: 'Home', onClick: () => {
+            if (window.location.pathname !== '/') onNavigate('/');
+            else scrollToSection('home');
+          }
+        },
         { name: 'Services', onClick: () => scrollToSection('services') },
         { name: 'How It Works', onClick: () => scrollToSection('how-it-works') },
         { name: 'About', onClick: () => scrollToSection('about') },
@@ -70,7 +85,7 @@ export default function Footer() {
 
   const legalLinks = [
     { name: 'Terms of Service', href: '#' },
-    { name: 'Privacy Policy', href: '#' },
+    { name: 'Privacy Policy', onClick: () => onNavigate('/privacy') },
   ];
 
   return (
