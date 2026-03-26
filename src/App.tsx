@@ -9,6 +9,8 @@ import About from './components/About';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Privacy from './components/Privacy';
+import CustomCursor from './components/ui/CustomCursor';
+import SmoothScroll from './components/ui/SmoothScroll';
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -29,10 +31,16 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 overflow-x-hidden relative">
-      <div className="fixed inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900 pointer-events-none"></div>
-      <div className="fixed inset-0 opacity-[0.05] bg-[radial-gradient(circle_at_50%_50%,_rgba(6,182,212,0.15),transparent_50%)] pointer-events-none"></div>
-
+    <div className="min-h-screen bg-black overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200">
+      {/* Foundation Layers */}
+      <SmoothScroll />
+      <div className="grain-overlay" />
+      <CustomCursor />
+      
+      {/* Background Ambience */}
+      <div className="fixed inset-0 bg-[#020617] -z-20" />
+      <div className="fixed top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_-20%,_rgba(6,182,212,0.1),transparent_50%)] pointer-events-none -z-10" />
+      
       <div className="relative z-10">
         <Navigation onNavigate={navigateTo} isPrivacyPage={currentPath === '/privacy'} />
 
