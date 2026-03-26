@@ -16,19 +16,22 @@ Transform the website from a standard tech agency look into a unique, elite, and
 ## ✅ Implementation Checklist
 
 ### 1. 🌑 Foundation & Vibe (The "Feel")
-- [x] **Grainy Texture Overlay**: Add a fixed `overlay` with a subtle noise/grain filter to the entire body to give it a "paper" or "tactile" feel.
-- [x] **Custom Fluid Cursor**: Implement a custom SVG/Div cursor that trails the mouse with a slight lag and scales/blurs when hovering over interactive elements.
-- [x] **Smooth Scroll (Lenis/Framer Motion)**: Integrate a smooth scrolling engine to make navigation feel buttery.
+- [x] **Grainy Texture Overlay**: Fixed noise filter added for tactile feel.
+- [x] **Smooth Scroll (Lenis/Framer Motion)**: Integrated Lenis for buttery-smooth navigation.
+- [x] **Clean Interface**: ~~Custom Cursor~~ (Removed to maintain elite minimalism).
 
-### 2. ✨ Interactive Elements (The "Magic")
-- [ ] **Magnetic Buttons**: Update `LiquidButton` and other CTA elements to have a magnetic pull towards the mouse when in proximity (50-100px).
-- [ ] **Floating Glass Blobs**: Add 2-3 large, subtly moving abstract shapes in the background with `backdrop-filter: blur(80px)` for depth.
-- [ ] **Bento Grid Redesign**: Refactor the "Services" section into a modern Bento-style grid with varying card sizes and interactive hover states.
+### 2. 🗂️ The "Disciplined" Stack (Vertical Pivot)
+- [ ] **Stacking Glass Cards**: Implement `sticky` positioning for services so they stack like a physical deck as you scroll.
+- [ ] **Interactive Depth Scaling**: Apply scroll-based scaling (shrink-down) so the "covered" card feels further away.
 
-### 3. 📝 Typography & Motion (The "Flow")
-- [ ] **Heading Split-Text**: Implement "Reveal on Scroll" animations where headings are split into characters/words and stagger into view.
-- [ ] **Editorial Typography**: Introduce a high-end serif font (e.g., *Cormorant Garamond* or *Playfair Display*) for specific "statement" words in the Hero and headings.
-- [ ] **Progressive Blur Masks**: Use SVG masks for images/sections that reveal with a "blur-in" effect rather than a simple fade.
+### 3. 🧩 Micro-Interactive Bento
+- [ ] **Glassmorphic Glass Tiles**: Cards with deep backdrop blurs (40px+) and multi-layered gradient accents.
+- [ ] **Physical Hover Glow**: A subtle light reflection that appears inside the card as users hover.
+- [ ] **Heading Character Reveals**: Staggered character reveal animations for section headers.
+
+### 4. 📝 Typography & Flow
+- [ ] **Heading Split-Text**: Staggered "reveal on scroll" animations for each header character.
+- [ ] **Editorial Font Treatment**: Mixing high-end Serifs with modern Sans strings.
 
 ---
 
